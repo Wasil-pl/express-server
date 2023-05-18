@@ -1,25 +1,35 @@
 const express = require('express');
+const path = require('path');
 
 const app = express();
 
+app.use((req, res, next) => {
+  res.show = (name) => {
+    res.sendFile(path.join(__dirname, `/views/${name}`));
+  };
+  next();
+});
+
+app.use('/user', (req, res, next) => {
+  res.send('please login');
+});
+
+app.use(express.static(path.join(__dirname, '/public')));
+
 app.get('/', (req, res) => {
-  res.send('<h1>My first server!</h1>');
+  res.show('index.html');
+});
+
+app.get('/home', (req, res) => {
+  res.show('index.html');
 });
 
 app.get('/about', (req, res) => {
-  res.send('<h1>About</h1>');
+  res.show('about.html');
 });
 
-app.get('/contact', (req, res) => {
-  res.send('<h1>Contact</h1>');
-});
-
-app.get('/info', (req, res) => {
-  res.send('<h1>Info</h1>');
-});
-
-app.get('/history', (req, res) => {
-  res.send('<h1>History</h1>');
+app.use((req, res) => {
+  res.show('404.html');
 });
 
 app.listen(8000, () => {
