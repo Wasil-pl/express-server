@@ -10,17 +10,13 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/user', (req, res, next) => {
-  res.send('please login');
-});
-
 app.use(express.static(path.join(__dirname, '/public')));
 
-app.get('/', (req, res) => {
-  res.show('index.html');
+app.use('/user', (req, res, next) => {
+  res.show('forbidden.html');
 });
 
-app.get('/home', (req, res) => {
+app.get(['/', '/home'], (req, res) => {
   res.show('index.html');
 });
 
@@ -29,7 +25,7 @@ app.get('/about', (req, res) => {
 });
 
 app.use((req, res) => {
-  res.show('404.html');
+  res.status(404).show('404.html');
 });
 
 app.listen(8000, () => {
